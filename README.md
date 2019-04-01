@@ -1,2 +1,62 @@
 # MediafireSDK
 Mediafire SDK for .NET
+<ul>
+	<li>.NET 4.5.2</li>
+	<li>One dependency library [Newtonsoft.Json]</li>
+</ul>
+=========
+<ul>
+	<li>ChangeFilePrivacy</li>
+	<li>ChangeFolderPrivacy</li>
+	<li>CheckIfFileExist</li>
+	<li>CopyFile</li>
+	<li>CopyFolder</li>
+	<li>CopyMultipleFiles</li>
+	<li>CopyMultipleFolders</li>
+	<li>CreateNewFolder</li>
+	<li>DeleteFile</li>
+	<li>DeleteFolder</li>
+	<li>DeleteMultipleFiles</li>
+	<li>DeleteMultipleFolders</li>
+	<li>DownloadFile</li>
+	<li>DownloadFileAsStream</li>
+	<li>DownloadMultipleFilesAsZip_premium</li>
+	<li>EmptyRecycleBin</li>
+	<li>FileMetadata</li>
+	<li>FolderMetadata</li>
+	<li>Get10MinToken</li>
+	<li>Get2YearToken</li>
+	<li>GetActionToken</li>
+	<li>GetFileLinks</li>
+	<li>GetFilesDownloadUrlAsZip</li>
+	<li>GetMultipleFilesLinks</li>
+	<li>ListFolder</li>
+	<li>ListRecycleBin</li>
+	<li>ListRoot</li>
+	<li>MoveFile</li>
+	<li>MoveFolder</li>
+	<li>MoveMultipleFiles</li>
+	<li>MoveMultipleFolders</li>
+	<li>MultipleFilesMetadata</li>
+	<li>OneTimeUseUrl</li>
+	<li>RenameFile</li>
+	<li>RenameFolder</li>
+	<li>RenewToken</li>
+	<li>RenewToken</li>
+	<li>ReplaceFile</li>
+	<li>ResizeDirectImageUrl</li>
+	<li>RevokeActionToken</li>
+	<li>RootMetadata</li>
+	<li>SearchFolder</li>
+	<li>SearchRoot</li>
+	<li>SpaceQuota</li>
+	<li>TrashFile</li>
+	<li>TrashFolder</li>
+	<li>TrashMultipleFiles</li>
+	<li>TrashMultipleFolders</li>
+	<li>UpdateFile</li>
+	<li>UploadLocalFile</li>
+	<li>UploadRemoteFile</li>
+	<li>UserInfo</li>
+	<li>UserSettings</li>
+</ul>
