@@ -1,4 +1,6 @@
 # MediafireSDK
+`Download`
+[https://github.com/jamesheck2019/MediafireSDK/releases](https://github.com/jamesheck2019/MediafireSDK/releases)<br>
 Mediafire SDK for .NET
 <ul>
 	<li>.NET 4.5.2</li>
