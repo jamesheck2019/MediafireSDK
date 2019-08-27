@@ -1,6 +1,7 @@
 # MediafireSDK
 `Download`
 [https://github.com/jamesheck2019/MediafireSDK/releases](https://github.com/jamesheck2019/MediafireSDK/releases)<br>
+<br>
 [![NuGet version (BlackBeltCoder.Silk)](https://img.shields.io/nuget/v/DeQmaTech.MediafireSDK.svg?style=plastic)](https://www.nuget.org/packages/DeQmaTech.MediafireSDK/)
 
 Mediafire SDK for .NET
