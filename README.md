@@ -1,12 +1,18 @@
-# MediafireSDK
-Mediafire SDK for .NET<br>
-.net framework 4.5.2<br>
-.net standard 2.0<br>
+## MediafireSDK
 
-`Download`
-[https://github.com/jamesheck2019/MediafireSDK/releases](https://github.com/jamesheck2019/MediafireSDK/releases)<br>
+`Download:`[https://github.com/jamesheck2019/MediafireSDK/releases](https://github.com/jamesheck2019/MediafireSDK/releases)<br>
+`NuGet:`
+[![NuGet](https://img.shields.io/nuget/v/DeQmaTech.MediafireSDK.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/DeQmaTech.MediafireSDK)<br>
 
-[![NuGet version (BlackBeltCoder.Silk)](https://img.shields.io/nuget/v/DeQmaTech.MediafireSDK.svg?style=plastic)](https://www.nuget.org/packages/DeQmaTech.MediafireSDK/)
+
+**Features**
+* Assemblies for .NET 4.5.2 and .NET Standard 2.0 and .NET Core 2.1
+* Just one external reference (Newtonsoft.Json)
+* Easy installation using NuGet
+* Upload/Download tracking support
+* Proxy Support
+* Upload/Download cancellation support
+
 
 # List of functions:
 <ul>
@@ -66,36 +72,66 @@ Mediafire SDK for .NET<br>
 </ul>
 
 # Code simple:
-**get 10 min token**
-```vb
-Dim tkn = Await MediafireSDK.GetToken.Get10MinToken("user", "pass")
-```
-**set client**
-```vb
-Dim Clnt As MediafireSDK.IClient = New MediafireSDK.MClient("token", "user", "pass")
-```
-**list root files/folders**
-```vb
-Dim RSLT = Await Clnt.ListRoot(fileOrFolder, Nothing, FoldersFilterEnum.public, Nothing, FoldersOrderByEnum.name, SortEnum.asc, 500, 1)
-For Each onz In RSLT.response.folder_content.FoldersList
-   DataGridView1.Rows.Add(onz.name, onz.FolderID, onz.total_files, onz.total_folders, onz.total_size, onz.folder_count, onz.file_count)
-Next
-For Each onz In RSLT.response.folder_content.FilesList
-   DataGridView1.Rows.Add(onz.name, onz.FileID, ISisFunctions.Bytes_To_KbMbGb.SetBytes(onz.size), onz.filetype, onz.mimetype, onz.ImgUrl, onz.links.normal_download)
-Next
-```
-**upload local file (without progress tracking)**
 ```vb.net
-Dim UploadCancellationToken As New Threading.CancellationTokenSource()
-Dim RSLT = Clnt.UploadLocalFile("C:\ureWiz.png", UploadTypes.FilePath, "DestinationFolderID", "ureWiz.png", IfAlreadyExist.keep, nothing, UploadCancellationToken.Token)
+    Async Sub Get_10Min_Token()
+        Dim tkn = Await MediafireSDK.GetToken.Get10MinToken("user", "pass")
+        DataGridView1.Rows.Add(tkn.response.session_token)
+    End Sub
 ```
-**upload local file with progress tracking**
 ```vb.net
-Dim UploadCancellationToken As New Threading.CancellationTokenSource()
-Dim prog_ReportCls As New Progress(Of MediafireSDK.ReportStatus)(Sub(ReportClass As MediafireSDK.ReportStatus)
-                   Label1.Text = String.Format("{0}/{1}", (ReportClass.BytesTransferred), (ReportClass.TotalBytes))
-                   ProgressBar1.Value = CInt(ReportClass.ProgressPercentage)
-                   Label2.Text = CStr(ReportClass.TextStatus)
-                   End Sub)
-Dim RSLT = Clnt.UploadLocalFile("C:\ureWiz.png", UploadTypes.FilePath, "DestinationFolderID", "ureWiz.png", IfAlreadyExist.keep, prog_ReportCls , UploadCancellationToken.Token)
+    Sub SetClient()
+        Dim MyClient As MediafireSDK.IClient = New MediafireSDK.MClient("tkn.response.session_token", "user", "pass")
+    End Sub
+```
+```vb.net
+    Sub SetClientWithOptions()
+        Dim Optians As New MediafireSDK.ConnectionSettings With {.CloseConnection = True, .TimeOut = TimeSpan.FromMinutes(30), .Proxy = New MediafireSDK.ProxyConfig With {.ProxyIP = "172.0.0.0", .ProxyPort = 80, .ProxyUsername = "myname", .ProxyPassword = "myPass", .SetProxy = True}}
+        Dim MyClient As MediafireSDK.IClient = New MediafireSDK.MClient("tkn.response.session_token", "user", "pass", Optians)
+    End Sub
+```
+```vb.net
+    Async Sub ListFilesFolders()
+        Dim Fileresult = Await MyClient.Data.List("folder Id/root = null", FilesFoldersEnum.files, FilesFilterEnum.all, Nothing, FilesOrderByEnum.name, Nothing, SortEnum.asc, 600, 1)
+        For Each vid In Fileresult.response.folder_content.FilesList
+            DataGridView1.Rows.Add(vid.FileID, vid.name, vid.size, vid.views)
+        Next
+        Dim Folderresult = Await MyClient.Data.List("folder Id/root = null", FilesFoldersEnum.folders, Nothing, FoldersFilterEnum.public, Nothing, FoldersOrderByEnum.name, SortEnum.asc, 600, 1)
+        For Each vid In Folderresult.response.folder_content.FilesList
+            DataGridView1.Rows.Add(vid.FileID, vid.name, vid.size, vid.views)
+        Next
+    End Sub
+```
+```vb.net
+    Async Sub GetFileMetadata()
+        Dim result = Await MyClient.Data.File.Metadata("file Id")
+        DataGridView1.Rows.Add(result.response.file_info.name, result.response.file_info.size, result.response.file_info.FileID, result.response.file_info.filetype)
+    End Sub
+```
+```vb.net
+    Async Sub DeleteAFile()
+        Dim result = Await MyClient.Data.File.Delete("file Id")
+        DataGridView1.Rows.Add(result)
+    End Sub
+```
+```vb.net
+    Async Sub Upload_Local_WithProgressTracking()
+        Dim UploadCancellationToken As New Threading.CancellationTokenSource()
+        Dim _ReportCls As New Progress(Of MediafireSDK.ReportStatus)(Sub(ReportClass As MediafireSDK.ReportStatus)
+                                                                         Label1.Text = String.Format("{0}/{1}", (ReportClass.BytesTransferred), (ReportClass.TotalBytes))
+                                                                         ProgressBar1.Value = CInt(ReportClass.ProgressPercentage)
+                                                                         Label2.Text = CStr(ReportClass.TextStatus)
+                                                                     End Sub)
+        Dim RSLT = Await MyClient.Data.File.Upload("J:\DB\myvideo.mp4", UploadTypes.FilePath, "folder id", "myvideo.mp4", IfAlreadyExist.keep, _ReportCls, UploadCancellationToken.Token)
+    End Sub
+```
+```vb.net
+    Async Sub DownloadFileLocateInPublicBucket_WithProgressTracking()
+        Dim DownloadCancellationToken As New Threading.CancellationTokenSource()
+        Dim _ReportCls As New Progress(Of MediafireSDK.ReportStatus)(Sub(ReportClass As MediafireSDK.ReportStatus)
+                                                                         Label1.Text = String.Format("{0}/{1}", (ReportClass.BytesTransferred), (ReportClass.TotalBytes))
+                                                                         ProgressBar1.Value = CInt(ReportClass.ProgressPercentage)
+                                                                         Label2.Text = CStr(ReportClass.TextStatus)
+                                                                     End Sub)
+        Await MyClient.Data.File.Download("file url", "J:\DB\", "myvideo.mp4", _ReportCls, DownloadCancellationToken.Token)
+    End Sub
 ```
